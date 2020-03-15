@@ -1,11 +1,12 @@
 class Person {
-	constructor(age, susceptibilityPercent) { //susceptibilityPercent == S/N * 100
+	constructor(age, susceptibilityPercent, daysTillResolution) { //susceptibilityPercent == S/N * 100
 		this.age = age;
 		this.statusLife = 'alive';
 		this.SN = susceptibilityPercent / 100; //epidemiological concept
 		this.isSusceptible = Math.random() < this.SN;
 		this._statusInfected = 'never infected';
 		this.daysSick = 0;
+		this._daysTillResolution = daysTillResolution;
 	}
 
 	get isAlive() {
@@ -65,16 +66,24 @@ class Person {
 		this.isSusceptible = false;
 	}
 
+	liveAnotherDay() {
+		this.daysSick++;
+	}
+
 	get likelihoodOfDying() {
 		return 0.034;
 	}
 
 	get likelihoodOfNotDyingAndNotRecovering() {
-		return 0.5; //TOTALLY MADE UP
+		return (this.daysTillResolution - this.daysSick)/this.daysTillResolution;
 	}
 
 	get likelihoodOfRecovering() {
 		return 1 - (this.likelihoodOfDying + this.likelihoodOfNotDyingAndNotRecovering); //this is WRONG WRONG WRONG. PEOPLE CONTINUE TO LIVE
+	}
+
+	get daysTillResolution() {
+		return this._daysTillResolution;
 	}
 
 	tryToLiveAnotherStep() {
@@ -89,6 +98,7 @@ class Person {
 		} else if(willRecover) {
 			p.recover();
 		} else {
+			p.liveAnotherDay();
 			//console.log('just staying alive');
 			//do nothing
 		}

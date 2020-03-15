@@ -17,14 +17,15 @@
 	var modelParams = {
 		startingPopulation : 10000,
 		startingPopulationSusceptiblePercent : 100,
-		rNought : 3
+		daysTillResolution : 16,
+		rNought : 1
 	};
 
 
-	function seedOutbreak(peopleCount, startingPopulationSusceptiblePercent, rNought) {
+	function seedOutbreak(peopleCount, startingPopulationSusceptiblePercent, rNought, daysTillResolution) {
 		let people = [];
 		for(let i=0; i<peopleCount; i++) {
-			people.push(new Person(40,startingPopulationSusceptiblePercent));
+			people.push(new Person(40,startingPopulationSusceptiblePercent,daysTillResolution));
 		}
 		let outbreak = new Outbreak(people,startingPopulationSusceptiblePercent,rNought);
 		return outbreak;
@@ -37,7 +38,7 @@
 	}
 
 	function simulate(startingInfected) {
-		let outbreak = seedOutbreak(modelParams.startingPopulation,modelParams.startingPopulationSusceptiblePercent, modelParams.rNought);
+		let outbreak = seedOutbreak(modelParams.startingPopulation,modelParams.startingPopulationSusceptiblePercent, modelParams.rNought, modelParams.daysTillResolution);
 		return kickOff(startingInfected,outbreak);
 	}
 

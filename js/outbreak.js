@@ -5,6 +5,7 @@ class Outbreak {
 		this._startingSusceptiblePopulation = startingPopulation * startingSusceptiblePopulationPercent / 100;
 		this.rNought = rNought;
 		this.rEffective = rNought; //starting value
+		this.stepsComplete = [];
 	}
 
 	infectSomePeople(countToInfect) {
@@ -71,6 +72,13 @@ class Outbreak {
 	get populationSusceptible() {
 		return this.peopleSusceptible.length;
 	}
+	get populationRecovered() {
+		return this.peopleRecovered.length;
+	}
+
+	get populationInfectedAndAlive() {
+		return this.peopleInfectedAndAlive.length;
+	}
 
 	playOut() {
 		console.log('simulating...');
@@ -126,19 +134,25 @@ class Outbreak {
 		this.people.forEach(person => {
 			person.tryToLiveAnotherStep();
 		});
-		let isOver = this.populationAlive === 0 || this.populationSusceptible === 0;
-		if(isOver) {
-			let nowAlive = this.populationAlive;
-			let nowDead = this.populationDead;
-			console.log('OUTBREAK RESULTS: ');
-			console.log('now infected-living count is: ' + this.peopleInfectedAndAlive.length);
-			console.log('population alive: ' + nowAlive);
-			console.log('population dead: ' + nowDead);
-			console.log('recovered count: ' + this.peopleRecovered.length);
-			console.log('susceptible count is: ' + this.populationSusceptible);
-			console.log('SN is: ' + this.SN);
-			console.log('pct of population that died: ' + 100*nowDead/(nowAlive+nowDead) + '%');
 
+		//record current state at end of day
+		let nowAlive = this.populationAlive;
+		let nowDead = this.populationDead;
+		let stepComplete = {
+			populationAlive: nowAlive,
+			populationDead: nowDead,
+			populationRecovered: this.populationRecovered,
+			populationInfectedAndAlive: this.populationInfectedAndAlive,
+			populationSusceptible : this.populationSusceptible,
+			pctPopulationDiedSoFar: nowDead/(nowAlive+nowDead)*100
+		};
+		this.stepsComplete.push(stepComplete);
+		console.log('step results:');
+		console.log(stepComplete);
+
+		let isOver = (stepComplete.populationInfectedAndAlive === 0 || stepComplete.populationAlive === 0);
+		if(isOver) {
+			console.log('OUTBREAK IS OVER')
 		}
 		return isOver;
 	}

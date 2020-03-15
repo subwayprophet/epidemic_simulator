@@ -24,7 +24,7 @@ class Outbreak {
 		return this.populationSusceptible / this.currentPopulation;
 	}
 
-	get rEffective() {
+	get rEffective() { //hm
 		return this.rNought * this.SN;
 	}
 

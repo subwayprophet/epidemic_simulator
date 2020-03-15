@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Epidemic Simulator</title>
+
+	<script type="text/javascript" src="js/outbreak.js"></script>
+	<script type="text/javascript" src="js/person.js"></script>
+
+</head>
+<body>
+
+</body>
+
+<script>
+
+	var modelParams = {
+		startingPopulation : 10000,
+		startingPopulationSusceptiblePercent : 100,
+		rNought : 3
+	};
+
+
+	function seedOutbreak(peopleCount, startingPopulationSusceptiblePercent, rNought) {
+		let people = [];
+		for(let i=0; i<peopleCount; i++) {
+			people.push(new Person(40,startingPopulationSusceptiblePercent));
+		}
+		let outbreak = new Outbreak(people,startingPopulationSusceptiblePercent,rNought);
+		return outbreak;
+	}
+
+	function kickOff(startingInfected, outbreak) {
+		outbreak.infectSomePeople(startingInfected);
+		outbreak.playOut();
+		return outbreak;
+	}
+
+	function simulate(startingInfected) {
+		let outbreak = seedOutbreak(modelParams.startingPopulation,modelParams.startingPopulationSusceptiblePercent, modelParams.rNought);
+		return kickOff(startingInfected,outbreak);
+	}
+
+</script>
+
+</html>
